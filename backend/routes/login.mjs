@@ -4,10 +4,14 @@ import dotenv from "dotenv"
 import { pool } from "../db/postgre.mjs";
 dotenv.config();
 import { Router } from "express";
+import { tracemiddlware } from "../middleware/tracemiddleware.mjs";
 export const route = Router();
 
-route.post('/login',async(req,res)=>{
+route.post('/login',tracemiddlware,async(req,res)=>{
     try{
+    console.log('traceId:', req.traceId);
+    console.log('spanId:', req.spanId);
+
     const {password,emailId} = req.body;
     const queryres = await pool.query('SELECT * FROM users WHERE email = $1', [emailId]);
     
